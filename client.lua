@@ -33,6 +33,24 @@ local function UpdateHud()
     })
 end
 
+CreateThread(function()
+    local lastState = false
+    while true do
+        Wait(500)
+        local pauseActive = IsPauseMenuActive()
+        if pauseActive and not lastState then
+            lastState = true
+            HudVisible = false
+            SendNUIMessage({ action = "hide" })
+        elseif not pauseActive and lastState then
+            lastState = false
+            HudVisible = true
+            UpdateHud()
+            SendNUIMessage({ action = "show" })
+        end
+    end
+end)
+
 --- Show / Hide
 exports('showhud', function()
     HudVisible = true
