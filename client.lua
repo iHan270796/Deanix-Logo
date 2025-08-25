@@ -90,12 +90,11 @@ end)
 --- Saat ganti duty
 RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
     if PlayerData and PlayerData.job then
-        PlayerData.job.onduty = duty -- update cache langsung
+        PlayerData.job.onduty = duty 
     end
     UpdateHud()
 end)
 
---- Event perubahan data
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
     if not PlayerData then PlayerData = {} end
     PlayerData.job = job
