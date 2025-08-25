@@ -87,15 +87,6 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     SendNUIMessage({ action = "hide" })
 end)
 
---- Saat mati/hidup
-RegisterNetEvent('QBCore:Client:OnPlayerDeath', function()
-    SendNUIMessage({ action = "hide" })
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerRevive', function()
-    UpdateHud()
-end)
-
 --- Saat ganti duty
 RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
     if PlayerData and PlayerData.job then
