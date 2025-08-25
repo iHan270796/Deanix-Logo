@@ -113,12 +113,7 @@ RegisterNetEvent('QBCore:Client:OnMoneyChange', function(type, amount, isMinus)
     UpdateHud()
 end)
 
+-- exports buat hide dan show hud
 
-
--- RegisterCommand("logoof", function()
---     exports['deanix_logo']:hidehud()
--- end, false)
-
--- RegisterCommand("logoon", function()
---     exports['deanix_logo']:showhud()
--- end, false)
+-- exports['deanix_logo']:hidehud()
+-- exports['deanix_logo']:showhud()
