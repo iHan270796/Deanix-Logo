@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Modern HUD</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Modern HUD</title>
+<link rel="stylesheet" href="style.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div id="hud" class="hud">
+<div id="hud" class="hud">
     <div class="top-row">
-  <div class="card id-card">
-    <i class="icon">🆔:</i><span id="player-id">ID: 0</span>
-  </div>
-
-  <div class="logo-container">
-    <img src="logo.png" class="logo" alt="Server Logo">
-    <div class="logo-text">DEANIX ROLEPLAY</div>
-  </div>
-</div>
-
-    <div class="row">
-      <div class="card"><i class="icon">💳​​</i><span id="bank">Bank: $0</span></div>
-      <div class="card"><i class="icon">💲​</i><span id="cash">Cash: $0</span></div>
+      <div class="card id-card"><span id="player-id"><i class="fa-solid fa-id-badge"></i> 0</span></div>
+        <div class="logo-container">
+            <img src="logo.png" class="logo" alt="Server Logo">
+            <div class="logo-text">DEANIX ROLEPLAY</div>
+        </div>
     </div>
-
-    <div class="row">
-  <div class="card">
-    <i class="icon" id="job-icon">👔</i><span id="job">Job: None</span>
-  </div>
-  <div class="card"><i class="icon">👥</i><span id="gang">Gang: None</span></div>
+     <div class="row">
+        <div class="card"><span id="bank"><i class="fa-solid fa-university"></i> $0</span></div>
+        <div class="card"><span id="cash"><i class="fa-solid fa-money-bill-wave"></i> $0</span></div>
+    </div>
+     <div class="row">
+        <div class="card"><span id="job"><i class="fa-solid fa-briefcase"></i> Job: None</span></div>
+        <div class="card"><span id="gang"><i class="fa-solid fa-users"></i> Gang: None</span></div>
+    </div>
 </div>
-  </div>
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

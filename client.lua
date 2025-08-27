@@ -1,33 +1,72 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local HudVisible = true
-local PlayerData = {} -- cache sendiri
+local PlayerData = {}
 
-local jobIcons = {
-    police = "👮",
-    ambulance = "🚑",
-    mechanic = "🔧",
-    taxi = "🚖",
-    burgershot = "🍔"
+local icons = {
+    id = "<i class='fa-solid fa-id-badge'></i>",
+    bank = "<i class='fa-solid fa-university'></i>",
+    cash = "<i class='fa-solid fa-money-bill-wave'></i>",
+    job = {
+        police = "<i class='fa-solid fa-shield-halved'></i>",
+        ambulance = "<i class='fa-solid fa-hospital'></i>",
+        mechanic = "<i class='fa-solid fa-wrench'></i>",
+        taxi = "<i class='fa-solid fa-taxi'></i>",
+        burgershot = "<i class='fa-solid fa-hamburger'></i>",
+        default = "<i class='fa-solid fa-briefcase'></i>"
+    },
+    gang = {
+        ballas = "<i class='fa-solid fa-skull-crossbones'></i>",
+        families = "<i class='fa-solid fa-hand-fist'></i>",
+        vagos = "<i class='fa-solid fa-dragon'></i>",
+        default = "<i class='fa-solid fa-users'></i>"
+    }
 }
 
---- Update HUD
 local function UpdateHud()
     if not HudVisible then return end
-    if not PlayerData or not PlayerData.job then return end
+    if not PlayerData then return end
 
-    local onDuty = PlayerData.job.onduty or false
-    local gradeName = PlayerData.job.grade and PlayerData.job.grade.name or ""
-    local dutyStatus = onDuty and " | On Duty" or " | Off Duty"
+    -- JOB
+    local jobLabel, jobIcon = "None", icons.job.default
+    if PlayerData.job then
+        local jobName = PlayerData.job.name
+        local onDuty = PlayerData.job.onduty or false
+        local grade = PlayerData.job.grade and PlayerData.job.grade.name or ""
+        local dutyStatus = onDuty and " | On Duty" or " | Off Duty"
+        jobLabel = ("%s (%s)%s"):format(PlayerData.job.label, grade, dutyStatus)
 
-    local jobLabel = ("%s (%s)%s"):format(PlayerData.job.label, gradeName, dutyStatus)
-    local jobIcon = onDuty and (jobIcons[PlayerData.job.name] or "👔") or "❌"
+        if jobName == "unemployed" then
+            jobIcon = "<i class='fa-solid fa-user'></i>"
+        else
+            if onDuty then
+                jobIcon = icons.job[jobName] or icons.job.default
+            else
+                jobIcon = "<i class='fa-solid fa-circle-xmark'></i>"
+            end
+        end
+    end
+
+    -- GANG
+    local gangLabel, gangIcon = "None", icons.gang.default
+    if PlayerData.gang then
+        local gangName = PlayerData.gang.name
+        local grade = PlayerData.gang.grade and PlayerData.gang.grade.name or ""
+        gangLabel = ("%s (%s)"):format(PlayerData.gang.label, grade)
+
+        if gangName == "none" then
+            gangIcon = "<i class='fa-solid fa-ban'></i>"
+        else
+            gangIcon = icons.gang[gangName] or icons.gang.default
+        end
+    end
 
     SendNUIMessage({
         action = "update",
         id = GetPlayerServerId(PlayerId()),
         job = jobLabel,
         jobIcon = jobIcon,
-        gang = PlayerData.gang and PlayerData.gang.label or "None",
+        gang = gangLabel,
+        gangIcon = gangIcon,
         bank = PlayerData.money and PlayerData.money.bank or 0,
         cash = PlayerData.money and PlayerData.money.cash or 0
     })
@@ -51,19 +90,6 @@ CreateThread(function()
     end
 end)
 
---- Show / Hide
-exports('showhud', function()
-    HudVisible = true
-    UpdateHud()
-    SendNUIMessage({ action = "show" })
-end)
-
-exports('hidehud', function()
-    HudVisible = false
-    SendNUIMessage({ action = "hide" })
-end)
-
---- Saat resource start
 AddEventHandler("onResourceStart", function(resName)
     if GetCurrentResourceName() ~= resName then return end
     CreateThread(function()
@@ -74,24 +100,16 @@ AddEventHandler("onResourceStart", function(resName)
     end)
 end)
 
---- Saat player load
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-    Wait(500)
+RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
+    if PlayerData and PlayerData.job then
+        PlayerData.job.onduty = duty
+    end
     UpdateHud()
 end)
 
---- Saat player unload
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    PlayerData = {}
-    SendNUIMessage({ action = "hide" })
-end)
-
---- Saat ganti duty
-RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
-    if PlayerData and PlayerData.job then
-        PlayerData.job.onduty = duty 
-    end
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+    Wait(500)
     UpdateHud()
 end)
 
@@ -113,7 +131,10 @@ RegisterNetEvent('QBCore:Client:OnMoneyChange', function(type, amount, isMinus)
     UpdateHud()
 end)
 
--- exports buat hide dan show hud
+-- RegisterCommand("logoof", function()
+--     exports['deanix_logo']:hidehud()
+-- end, false)
 
--- exports['deanix_logo']:hidehud()
--- exports['deanix_logo']:showhud()
+-- RegisterCommand("logoon", function()
+--     exports['deanix_logo']:showhud()
+-- end, false)
