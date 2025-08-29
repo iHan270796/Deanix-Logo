@@ -73,6 +73,44 @@ local function UpdateHud()
 end
 
 CreateThread(function()
+    while true do
+        Wait(300)
+        local ped = PlayerPedId()
+        local weapon = GetSelectedPedWeapon(ped)
+        if weapon ~= `WEAPON_UNARMED` then
+            local _, ammoClip = GetAmmoInClip(ped, weapon)
+            local ammoTotal = GetAmmoInPedWeapon(ped, weapon)
+
+            SendNUIMessage({
+                action = "updateWeapon",
+                weapon = { icon = "fa-solid fa-gun" },
+                ammoClip = ammoClip,
+                ammoTotal = ammoTotal
+            })
+        else
+            SendNUIMessage({ action = "updateWeapon", weapon = false })
+        end
+    end
+end)
+
+CreateThread(function()
+    while true do
+        Wait(200)
+        local talking = NetworkIsPlayerTalking(PlayerId())
+        SendNUIMessage({ action = "voice", talking = talking })
+    end
+end)
+
+CreateThread(function()
+    while true do
+        Wait(1000)
+        local ped = PlayerPedId()
+        local inVehicle = IsPedInAnyVehicle(ped, false)
+        SendNUIMessage({ action = "vehicleHud", inVehicle = inVehicle })
+    end
+end)
+
+CreateThread(function()
     local lastState = false
     while true do
         Wait(500)
@@ -81,6 +119,8 @@ CreateThread(function()
             lastState = true
             HudVisible = false
             SendNUIMessage({ action = "hide" })
+            SendNUIMessage({ action = "updateWeapon", weapon = false })
+            SendNUIMessage({ action = "voice", talking = false })
         elseif not pauseActive and lastState then
             lastState = false
             HudVisible = true
@@ -131,10 +171,26 @@ RegisterNetEvent('QBCore:Client:OnMoneyChange', function(type, amount, isMinus)
     UpdateHud()
 end)
 
--- RegisterCommand("logoof", function()
---     exports['deanix_logo']:hidehud()
--- end, false)
+local function ShowHud()
+    HudVisible = true
+    UpdateHud()
+    SendNUIMessage({ action = "show" })
+end
 
--- RegisterCommand("logoon", function()
---     exports['deanix_logo']:showhud()
--- end, false)
+local function HideHud()
+    HudVisible = false
+    SendNUIMessage({ action = "hide" })
+    SendNUIMessage({ action = "updateWeapon", weapon = false })
+    SendNUIMessage({ action = "voice", talking = false })
+end
+
+exports('showhud', ShowHud)
+exports('hidehud', HideHud)
+
+RegisterCommand("logoon", function()
+    ShowHud()
+end, false)
+
+RegisterCommand("logoof", function()
+    HideHud()
+end, false)

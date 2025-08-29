@@ -1,3 +1,5 @@
+let hudVisible = true;
+
 window.addEventListener('message', function(event) {
     const data = event.data;
 
@@ -10,10 +12,43 @@ window.addEventListener('message', function(event) {
     }
 
     if (data.action === "show") {
+        hudVisible = true;
         document.getElementById("hud").style.display = "flex";
+        document.getElementById("voice-hud").style.display = "flex";
     }
 
     if (data.action === "hide") {
+        hudVisible = false;
         document.getElementById("hud").style.display = "none";
+        document.getElementById("weapon-hud").classList.add("hidden");
+        document.getElementById("voice-hud").style.display = "none";
+    }
+
+    if (data.action === "updateWeapon" && hudVisible) {
+        if (data.weapon) {
+            const weaponHud = document.getElementById("weapon-hud");
+            weaponHud.classList.remove("hidden");
+            document.getElementById("weapon-icon").className = data.weapon.icon;
+            document.getElementById("ammo-count").textContent = `${data.ammoClip} / ${data.ammoTotal}`;
+        } else {
+            document.getElementById("weapon-hud").classList.add("hidden");
+        }
+    }
+
+    if (data.action === "voice" && hudVisible) {
+        const voiceHud = document.getElementById("voice-hud");
+        if (data.talking) {
+            voiceHud.classList.add("talking");
+        } else {
+            voiceHud.classList.remove("talking");
+        }
+    }
+
+    if (data.action === "vehicleHud" && hudVisible) {
+        if (data.inVehicle) {
+            document.getElementById("bottom-hud").classList.add("in-vehicle");
+        } else {
+            document.getElementById("bottom-hud").classList.remove("in-vehicle");
+        }
     }
 });
