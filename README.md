@@ -3,6 +3,6 @@ https://cdn.discordapp.com/attachments/1360341141580415127/1411019759612596265/U
 
 show hide hud
 
-exports('showhud', ShowHud)
+exports['deanix_logo']:showhud()
 
-exports('hidehud', HideHud)
+exports['deanix_logo']:hidehud()
