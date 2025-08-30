@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Modern HUD</title>
+<link rel="stylesheet" href="style.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div id="hud" class="hud">
+    <div class="top-row">
+      <div class="card id-card"><span id="player-id"><i class="fa-solid fa-id-badge"></i> 0</span></div>
+        <div class="logo-container">
+            <img src="logo.png" class="logo" alt="Server Logo">
+            <div class="logo-text">DEANIX ROLEPLAY</div>
+        </div>
+    </div>
+     <div class="row">
+        <div class="card"><span id="bank"><i class="fa-solid fa-university"></i> $0</span></div>
+        <div class="card"><span id="cash"><i class="fa-solid fa-money-bill-wave"></i> $0</span></div>
+    </div>
+     <div class="row">
+        <div class="card"><span id="job"><i class="fa-solid fa-briefcase"></i> Job: None</span></div>
+        <div class="card"><span id="gang"><i class="fa-solid fa-users"></i> Gang: None</span></div>
+    </div>
+    </div>
+    <div id="bottom-hud" class="bottom-hud">
+      <div id="weapon-hud" class="weapon-hud">
+        <i id="weapon-icon" class="fa-solid fa-gun"></i>
+          <span id="ammo-count">0 / 0</span>
+      </div>
+      <div id="voice-hud" class="voice-hud">
+          <div class="voice-wave"></div>
+          <div class="voice-wave"></div>
+          <div class="voice-wave"></div>
+      </div>
+    </div>
+      <div id="crosshair" class="crosshair hidden"></div>
+    <script src="script.js"></script>
+</body>
+</html>
